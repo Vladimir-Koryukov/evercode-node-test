@@ -5,4 +5,5 @@ module.exports = {
     AuthorizationError: require('./AuthorizationError'),
     NotFoundError: require('./NotFoundError'),
     ConflictError: require('./ConflictError'),
+    ExternalApiError: require('./ExternalApiError'),
 };

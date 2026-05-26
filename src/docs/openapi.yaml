@@ -26,6 +26,16 @@ components:
           type: string
           example: BTC
 
+    Price:
+      type: object
+      properties:
+        symbol:
+          type: string
+          example: BTCUSDT
+        price:
+          type: string
+          example: "70000.00"
+
     ErrorResponse:
       type: object
       properties:
@@ -207,3 +217,50 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+
+  /price:
+    get:
+      summary: Get Binance prices by currency ticker
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: currency
+          in: query
+          required: true
+          schema:
+            type: string
+            example: BTC
+      responses:
+        '200':
+          description: List of Binance symbols with prices
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Price'
+        '400':
+          description: Currency query parameter is missing or invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Currency ticker does not exist in local storage
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '502':
+          description: Binance API error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        
