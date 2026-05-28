@@ -2,6 +2,9 @@ const fs = require('fs');
 const path = require('path');
 const sqlite3 = require('sqlite3').verbose();
 const config = require('../config');
+const createLogger = require('../logger');
+
+const logger = createLogger(config.appName);
 
 const databasePath = config.database.path;
 const databaseDir = path.dirname(databasePath);
@@ -22,9 +25,9 @@ db.serialize(() => {
 
 db.close((error) => {
     if (error) {
-        console.log('Failed to close database connection', error.message);
+        logger.error(`Failed to close database connection: ${error.message}`);
         process.exit(1);
     }
 
-    console.log('Database initialized successfully');
+    logger.info('Database initialized successfully');
 });

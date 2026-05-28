@@ -11,7 +11,7 @@ async function getPricesByCurrency(currencyTicker) {
 
     const normalizedCurrency = currencyTicker.trim().toUpperCase();
 
-    currencyService.getCurrencyByTicker(normalizedCurrency);
+    await currencyService.getCurrencyByTicker(normalizedCurrency);
 
     const prices = await binanceClient.fetchBinancePrices();
 

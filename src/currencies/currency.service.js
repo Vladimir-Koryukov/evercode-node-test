@@ -15,13 +15,13 @@ function normalizeTicker(ticker) {
     return ticker.trim().toUpperCase();
 }
 
-function getAllCurrencies() {
+async function getAllCurrencies() {
     return currencyRepository.findAll();
 }
 
-function getCurrencyByTicker(ticker) {
-    const normalizedTicker = normalizeTicker(ticker)
-    const currency = currencyRepository.findByTicker(normalizedTicker);
+async function getCurrencyByTicker(ticker) {
+    const normalizedTicker = normalizeTicker(ticker);
+    const currency = await currencyRepository.findByTicker(normalizedTicker);
 
     if (!currency) {
         throw new NotFoundError('Currency is not found', { ticker: normalizedTicker });
@@ -30,7 +30,7 @@ function getCurrencyByTicker(ticker) {
     return currency;
 }
 
-function createCurrency(currency) {
+async function createCurrency(currency) {
     validateCurrencyData(currency);
 
     const normalizedCurrency = {
@@ -38,7 +38,7 @@ function createCurrency(currency) {
         ticker: normalizeTicker(currency.ticker),
     };
 
-    const existingCurrency = currencyRepository.findByTicker(normalizedCurrency.ticker);
+    const existingCurrency = await currencyRepository.findByTicker(normalizedCurrency.ticker);
 
     if (existingCurrency) {
         throw new ConflictError('Currency already exist', { ticker: normalizedCurrency.ticker });
@@ -47,7 +47,7 @@ function createCurrency(currency) {
     return currencyRepository.create(normalizedCurrency);
 }
 
-function updateCurrency(ticker, newCurrency) {
+async function updateCurrency(ticker, newCurrency) {
     validateCurrencyData(newCurrency);
 
     const normalizedTicker = normalizeTicker(ticker);
@@ -56,7 +56,7 @@ function updateCurrency(ticker, newCurrency) {
         ticker: normalizeTicker(newCurrency.ticker),
     };
 
-    const updatedCurrency = currencyRepository.update(normalizedTicker, normalizedCurrency);
+    const updatedCurrency = await currencyRepository.update(normalizedTicker, normalizedCurrency);
 
     if (!updatedCurrency) {
         throw new NotFoundError('Currency is not found', { ticker: normalizedTicker });
@@ -65,9 +65,9 @@ function updateCurrency(ticker, newCurrency) {
     return updatedCurrency;
 }
 
-function deleteCurrency(ticker) {
+async function deleteCurrency(ticker) {
     const normalizedTicker = normalizeTicker(ticker);
-    const deletedCurrency = currencyRepository.remove(normalizedTicker);
+    const deletedCurrency = await currencyRepository.remove(normalizedTicker);
 
     if (!deletedCurrency) {
         throw new NotFoundError('Currency is not found', { ticker: normalizedTicker } );
@@ -75,7 +75,7 @@ function deleteCurrency(ticker) {
 }
 
 function clearAll() {
-    currencyRepository.clear();
+    return currencyRepository.clear();
 }
 
 module.exports = {
@@ -85,4 +85,4 @@ module.exports = {
     updateCurrency,
     deleteCurrency,
     clearAll,
-}
+};

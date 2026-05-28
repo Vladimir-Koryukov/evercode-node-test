@@ -6,8 +6,8 @@ const validToken = process.env.AUTHORIZATION_TOKEN;
 const authHeader = `Bearer ${validToken}`;
 
 describe('price routes', () => {
-    beforeEach(() => {
-        currencyService.clearAll();
+    beforeEach(async () => {
+        await currencyService.clearAll();
 
         global.fetch = jest.fn().mockResolvedValue({
             ok: true,
@@ -24,7 +24,7 @@ describe('price routes', () => {
     });
 
     test('returns prices that include requested currency ticker', async () => {
-        currencyService.createCurrency({
+        await currencyService.createCurrency({
             name: 'Bitcoin',
             ticker: 'BTC',
         });

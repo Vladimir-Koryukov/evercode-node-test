@@ -6,8 +6,8 @@ const validToken = process.env.AUTHORIZATION_TOKEN;
 const authHeader = `Bearer ${validToken}`;
 
 describe('currency routes', () => {
-    beforeEach(() => {
-        currencyService.clearAll();
+    beforeEach(async () => {
+        await currencyService.clearAll();
     });
 
     test('creates, reads, updates and deletes currency', async () => {
