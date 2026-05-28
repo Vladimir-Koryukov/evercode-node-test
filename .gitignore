@@ -4,3 +4,8 @@ logs/
 .env
 .DS_Store
 Thumbs.db
+
+database/
+*.db
+*.sqlite
+*.sqlite3

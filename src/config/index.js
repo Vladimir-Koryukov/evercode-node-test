@@ -5,6 +5,9 @@ const config = {
   server: {
     port: 3001,
   },
+  database: {
+    path: process.env.DATABASE_PATH || './database/app.db',
+  },
   auth: {
     token: process.env.AUTHORIZATION_TOKEN,
   },
