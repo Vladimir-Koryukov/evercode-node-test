@@ -9,6 +9,14 @@
     "test": "jest",
     "db:init": "node src/db/initDatabase.js"
   },
+  "jest": {
+    "setupFiles": [
+      "<rootDir>/src/test/setupEnv.js"
+    ],
+    "setupFilesAfterEnv": [
+      "<rootDir>/src/test/setupDatabase.js"
+    ]
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
