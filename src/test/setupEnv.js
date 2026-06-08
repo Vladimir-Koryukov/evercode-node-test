@@ -1,0 +1,1 @@
+process.env.AUTHORIZATION_TOKEN = 'a'.repeat(64);

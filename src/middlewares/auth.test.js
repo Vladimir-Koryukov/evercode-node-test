@@ -1,6 +1,4 @@
-const validToken = 'a'.repeat(64);
-
-process.env.AUTHORIZATION_TOKEN = validToken;
+const validToken = process.env.AUTHORIZATION_TOKEN;
 
 const express = require('express');
 const request = require('supertest');
