@@ -3,6 +3,7 @@ const path = require('path');
 const sqlite3 = require('sqlite3').verbose();
 const config = require('../config');
 const createLogger = require('../logger');
+const { CREATE_CURRENCIES_TABLE } = require('./schema');
 
 const logger = createLogger(config.appName);
 
@@ -14,13 +15,7 @@ fs.mkdirSync(databaseDir, { recursive: true });
 const db = new sqlite3.Database(databasePath);
 
 db.serialize(() => {
-    db.run(`
-        CREATE TABLE IF NOT EXISTS currencies(
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            ticker TEXT NOT NULL UNIQUE,
-            name TEXT NOT NULL
-        )        
-    `);
+    db.run(CREATE_CURRENCIES_TABLE);
 });
 
 db.close((error) => {

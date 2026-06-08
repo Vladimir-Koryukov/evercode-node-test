@@ -12,6 +12,9 @@
   "jest": {
     "setupFiles": [
       "<rootDir>/src/test/setupEnv.js"
+    ],
+    "setupFilesAfterEnv": [
+      "<rootDir>/src/test/setupDatabase.js"
     ]
   },
   "keywords": [],
