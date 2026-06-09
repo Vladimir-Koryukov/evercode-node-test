@@ -8,4 +8,4 @@ logger.info("app started");
 
 scheduleTask("running", config.scheduler.defaultInterval, () => {
   logger.info("running");
-}, logger.info);
+}, logger);
