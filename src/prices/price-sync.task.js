@@ -14,6 +14,9 @@ function startPriceSyncTask(logger) {
             );
         },
         logger,
+        {
+            runImmediately: true,
+        },
     );
 }
 

@@ -115,4 +115,23 @@ describe('scheduleTask', () => {
 
         clearInterval(intervalId);
     });
+
+    test('executes task immediately when configured', async () => {
+        const task = jest.fn();
+        const logger = createTestLogger();
+
+        const intervalId = scheduleTask(
+            'running',
+            1000,
+            task,
+            logger,
+            { runImmediately: true },
+        );
+
+        await Promise.resolve();
+
+        expect(task).toHaveBeenCalledTimes(1);
+
+        clearInterval(intervalId);
+    });
 });

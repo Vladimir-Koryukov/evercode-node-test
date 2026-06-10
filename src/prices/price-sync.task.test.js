@@ -30,6 +30,9 @@ describe('startPriceSyncTask', () => {
             config.scheduler.priceSyncInterval,
             expect.any(Function),
             logger,
+            {
+                runImmediately: true,
+            },
         );
 
         const scheduledTask = scheduleTask.mock.calls[0][2];

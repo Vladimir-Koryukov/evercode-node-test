@@ -1,6 +1,6 @@
 const { ValidationError } = require('../errors');
 
-function scheduleTask(name, interval, task, logger) {
+function scheduleTask(name, interval, task, logger, options = {}) {
   if (typeof name !== "string" || name.trim().length === 0) {
     throw new ValidationError("Task name must be a non-empty string", { name });
   }
@@ -43,7 +43,13 @@ function scheduleTask(name, interval, task, logger) {
 
   logger.info(`Task "${name}" scheduled every ${interval}ms`);
 
-  return setInterval(executeTask, interval);
+  const intervalId = setInterval(executeTask, interval);
+
+  if (options.runImmediately) {
+    executeTask();
+  }
+
+  return intervalId;
 }
 
 module.exports = scheduleTask;
