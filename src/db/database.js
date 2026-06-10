@@ -57,7 +57,9 @@ function all(sql, params = []) {
     });
 }
 
-async function transaction(callback) {
+let transactionQueue = Promise.resolve();
+
+async function executeTransaction(callback) {
     await run('BEGIN TRANSACTION');
 
     try {
@@ -69,6 +71,16 @@ async function transaction(callback) {
         logger.error(`Database transaction rolled back: ${error.message}`);
         throw error;
     }
+}
+
+function transaction(callback) {
+    const queuedTransaction = transactionQueue.then(() => {
+        return executeTransaction(callback);
+    });
+
+    transactionQueue = queuedTransaction.catch(() => {});
+
+    return queuedTransaction;
 }
 
 module.exports = {
