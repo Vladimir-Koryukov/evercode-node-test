@@ -1,11 +1,28 @@
 const config = require('./config');
 const createLogger = require('./logger');
-const scheduleTask = require('./scheduler');
+const startPriceSyncTask = require('./prices/price-sync.task');
 
 const logger = createLogger(config.appName);
 
-logger.info("app started");
+logger.info('Price synchronization worker started');
 
-scheduleTask("running", config.scheduler.defaultInterval, () => {
-  logger.info("running");
-}, logger.info);
+const priceSyncInterval = startPriceSyncTask(logger);
+
+let isShuttingDown = false;
+
+function shutdown(signal) {
+  if (isShuttingDown) {
+    return;
+  }
+
+  isShuttingDown = true;
+
+  logger.info(`${signal} received. Stopping price synchronization worker`);
+
+  clearInterval(priceSyncInterval);
+
+  logger.info('Price synchronization worker stopped');
+}
+
+process.once('SIGINT', () => shutdown('SIGINT'));
+process.once('SIGTERM', () => shutdown('SIGTERM'));

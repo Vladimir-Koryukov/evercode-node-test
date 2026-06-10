@@ -1,6 +1,7 @@
 const request = require('supertest');
 const app = require('../app');
 const currencyService = require('../currencies/currency.service');
+const priceRepository = require('./price.repository');
 
 const validToken = process.env.AUTHORIZATION_TOKEN;
 const authHeader = `Bearer ${validToken}`;
@@ -8,15 +9,9 @@ const authHeader = `Bearer ${validToken}`;
 describe('price routes', () => {
     beforeEach(async () => {
         await currencyService.clearAll();
+        await priceRepository.clear();
 
-        global.fetch = jest.fn().mockResolvedValue({
-            ok: true,
-            json: async () => [
-                { symbol: 'BTCUSDT', price: '70000.00' },
-                { symbol: 'ETHBTC', price: '0.03' },
-                { symbol: 'ETHUSDT', price: '2100.00' },
-            ],
-        });
+        global.fetch = jest.fn();
     });
 
     afterEach(() => {
@@ -29,11 +24,18 @@ describe('price routes', () => {
             ticker: 'BTC',
         });
 
+        await priceRepository.replaceAll([
+            { symbol: 'BTCUSDT', price: '70000.00' },
+            { symbol: 'ETHBTC', price: '0.03' },
+            { symbol: 'ETHUSDT', price: '2100.00' },
+        ], new Date().toISOString());
+
         const response = await request(app)
             .get('/price?currency=btc')
             .set('Authorization', authHeader);
 
         expect(response.statusCode).toBe(200);
+        expect(global.fetch).not.toHaveBeenCalled();
         expect(response.body).toEqual([
             { symbol: 'BTCUSDT', price: '70000.00' },
             { symbol: 'ETHBTC', price: '0.03' },

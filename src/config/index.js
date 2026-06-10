@@ -12,7 +12,7 @@ const config = {
     token: process.env.AUTHORIZATION_TOKEN,
   },
   scheduler: {
-    defaultInterval: 10000,
+    priceSyncInterval: 60 * 1000,
   },
 };
 
