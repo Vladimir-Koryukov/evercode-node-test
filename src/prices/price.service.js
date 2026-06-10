@@ -1,5 +1,5 @@
 const currencyService = require('../currencies/currency.service');
-const binanceClient = require('../external/binance.client');
+const priceRepository = require('./price.repository');
 const ValidationError = require('../errors/ValidationError');
 
 async function getPricesByCurrency(currencyTicker) {
@@ -13,14 +13,7 @@ async function getPricesByCurrency(currencyTicker) {
 
     await currencyService.getCurrencyByTicker(normalizedCurrency);
 
-    const prices = await binanceClient.fetchBinancePrices();
-
-    return prices.filter((price) => {
-        return (
-            typeof price.symbol === 'string' &&
-            price.symbol.includes(normalizedCurrency)
-        );
-    });
+    return priceRepository.findByCurrencyTicker(normalizedCurrency);
 }
 
 module.exports = {
